@@ -1,0 +1,29 @@
+{
+  "telegram_bot_token": "0000000000:replace_with_bot_token",
+  "testacc": "replace_with_scratch_test_account_token",
+  "remixes_cloud_token": "replace_with_remixes_cloud_token",
+  "remixer_token": "replace_with_remixer_token",
+  "account_remixer": {
+    "Cookie": "replace_with_cookie_header",
+    "referer": "https://scratch.mit.edu/",
+    "X-Requested-With": "XMLHttpRequest",
+    "X-CSRFToken": "replace_with_csrf_token",
+    "Content-Type": "application/json",
+    "Accept-Language": "ru-RU,ru;q=0.9",
+    "Origin": "https://scratch.mit.edu",
+    "Accept-Encoding": "gzip, deflate, br, zstd",
+    "Accept": "*/*"
+  },
+  "scratch_activity_headers": {
+    "Cookie": "replace_with_activity_cookie_header",
+    "referer": "https://scratch.mit.edu/",
+    "X-Requested-With": "XMLHttpRequest",
+    "X-CSRFToken": "replace_with_activity_csrf_token",
+    "Content-Type": "application/json",
+    "Accept-Language": "ru-RU,ru;q=0.9",
+    "Origin": "https://scratch.mit.edu",
+    "Accept-Encoding": "gzip, deflate, br, zstd",
+    "Accept": "*/*"
+  },
+  "eval_mask_token": "0000000000:replace_with_mask_token"
+}
