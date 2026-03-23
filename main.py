@@ -6,7 +6,6 @@ import json
 import random
 import ast
 import os
-import sys
 import base64
 import pytz
 from http.cookies import SimpleCookie
@@ -17,27 +16,8 @@ with open('tokens.json', 'r', encoding='utf-8') as f:
 
 trusted = [5184185845, 7417081858, 7894813633, 5452789572, 6678922340, 1327137572, 5464616347, 5253491877, 1413199933,
            6685504562, 1208376516, 5769586223, 5598453128]
-veryverytrusted = '''⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠠⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⠤⠞⣋⠉⣿⣯⣿⢿⣖⠦⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢠⠿⣶⣾⣿⣾⣿⣹⣿⣶⣿⣿⣾⢧⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣰⣧⣰⣿⣿⣿⣿⣿⣿⡿⠿⠿⣿⣿⡟⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠟⣠⣿⠟⠋⠉⠀⠈⠀⠀⠀⠀⠘⣿⣧⢣⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣼⣿⣿⠀⠀⠀⢀⡀⠀⠀⣀⡀⠀⣾⣿⣆⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣿⣿⡏⠀⢻⣯⡽⢿⡄⠘⢿⡯⠵⢻⣟⡋⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣾⠼⣧⠀⠉⠀⠀⠀⠁⠀⠀⠀⠀⢨⣿⢳⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢌⢧⣬⠇⠀⠀⠀⠸⠛⠂⠘⠆⢎⡴⣻⠏⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⠉⣿⡆⠀⠀⢾⣯⢿⣗⣀⣼⣹⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢠⠸⡟⠀⠀⠀⠟⢲⣶⠶⣿⠍⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣴⣿⠰⡇⠀⠀⠀⠴⢺⣿⣤⢿⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣤⣾⣿⣿⣿⡆⢧⡀⠀⢀⣀⣼⣿⣟⡇⢿⣷⣶⣤⣄⣀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⣀⣴⣶⣿⣿⣿⣿⣿⣿⣿⣷⠀⠳⣄⠀⠉⢿⣿⣿⠇⠸⣿⣿⣿⣿⣿⣿⣷⣦⣄⡀⠀
-⠀⢀⣤⣶⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡷⠆⠙⢦⣀⣨⠗⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⠀
-⠀⣼⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣀⣠⣤⣀⣉⠀⠀⡀⢠⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡆
-⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⡟⢁⣼⠿⢿⣿⣿⣿⠲⠶⠶⠯⢤⣠⣽⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣇
-⠀⡿⣿⣿⣿⣿⣿⣿⣿⡟⣰⢹⣁⡀⠈⠙⣻⣿⣍⣉⣙⣒⣻⠓⢾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡏
-⠀⣷⣾⣿⣿⣿⣿⣿⣿⠁⡇⠀⠉⡀⠙⢿⣿⣿⡧⠤⠤⠭⠭⣌⣻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇
-⢀⣿⣿⣿⣿⣿⣿⣿⣿⡟⠁⠀⠀⣇⣤⣾⣿⣿⣗⠒⠒⠲⣶⠦⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇'''
-verytrusted = [1327137572, 5184185845, 7894813633, 5452789572, 7417081858]
+#supertrusted = [1327137572, 5184185845, 7894813633, 5452789572, 7417081858]
+supertrusted = [5663217441]
 blocklist = [7857488037]  # , 1087968824, 136817688, 777000]
 testacc = TOKENS['testacc']
 token = TOKENS['telegram_bot_token']
@@ -186,7 +166,7 @@ def login(username, password):
 
 
 def cmd(c, msg):
-    return msg in [f'/{c}', f'/{c}@Botik5555Bot', f'/{c}@botik5555bot']
+    return msg in [f'/{c}', f'/{c}@rsokolov3Bot', f'/{c}@rsokolov3Bot']
 
 
 def msg(chat, text, reply, is_topic_message, thr, parse=False):
@@ -540,7 +520,10 @@ def everything(message):  # Название функции не играет н
                         "Привет!\nТы находишься в чёрном списке этого бота, из-за чего все команды отключены",
                         message.message_id, message.is_topic_message, message.message_thread_id)
             else:
-                msg(message.chat.id, "Привет!\nЯ бот, созданный @polzovatel_5555!\nКоманды бота - /help",
+                msg(message.chat.id, "Привет!\n"
+                                     "Я бот, форк бота, созданного @polzovatel_5555, поддерживаюсь @gervatyy!\n"
+                                     "Репозиторий - https://github.com/gervaty/Bot5555\n"
+                                     "Команды бота - /help",
                     message.message_id, message.is_topic_message, message.message_thread_id)
         elif message.text.startswith('/start ') and message.chat.id > 0:
             if message.text.startswith('/start r'):
@@ -685,7 +668,7 @@ def everything(message):  # Название функции не играет н
                                       message.message_thread_id)
                 # bot.edit_message_text(chat_id=message.chat.id, message_id=msg.message_id, text="Успешно")
         elif message.text.startswith('/case'):
-            if message.text.startswith('/case ') or message.text.startswith('/case@Botik5555Bot '):
+            if message.text.startswith('/case ') or message.text.startswith('/case@rsokolov3Bot '):
                 try:
                     case = int(message.text.split()[1])
                 except ValueError:
@@ -705,7 +688,7 @@ def everything(message):  # Название функции не играет н
                 msg(message.chat.id, "Не хватает аргумента", message.message_id, message.is_topic_message,
                     message.message_thread_id)
         elif message.text.startswith('/ip'):
-            if message.text.startswith('/ip ') or message.text.startswith('/ip@Botik5555Bot '):
+            if message.text.startswith('/ip ') or message.text.startswith('/ip@rsokolov3Bot '):
                 try:
                     ip = message.text.split()[1].split('.')
                     isval = True
@@ -751,7 +734,7 @@ def everything(message):  # Название функции не играет н
                 msg(message.chat.id, "Эээ... А где ip?", message.message_id, message.is_topic_message,
                     message.message_thread_id)
         elif message.text.startswith('/agent'):
-            if message.text.startswith('/agent ') or message.text.startswith('/agent@Botik5555Bot '):
+            if message.text.startswith('/agent ') or message.text.startswith('/agent@rsokolov3Bot '):
                 if message.is_topic_message:
                     bot.send_chat_action(message.chat.id, 'typing', message_thread_id=message.message_thread_id)
                 else:
@@ -762,7 +745,7 @@ def everything(message):  # Название функции не играет н
                 msg(message.chat.id, "Эта команда не должна быть пустой", message.message_id, message.is_topic_message,
                     message.message_thread_id)
         elif message.text.startswith('/messages'):
-            if message.text.startswith('/messages ') or message.text.startswith('/messages@Botik5555Bot '):
+            if message.text.startswith('/messages ') or message.text.startswith('/messages@rsokolov3Bot '):
                 try:
                     req = requests.get(
                         f'{cors}https://api.scratch.mit.edu/users/{message.text.split()[1]}/messages/count')
@@ -796,7 +779,7 @@ def everything(message):  # Название функции не играет н
                 msg(message.chat.id, f'Команда /id была удалена', message.message_id, message.is_topic_message,
                     message.message_thread_id)
         elif message.text.startswith('/member'):
-            if message.text.startswith('/member ') or message.text.startswith('/member@Botik5555Bot '):
+            if message.text.startswith('/member ') or message.text.startswith('/member@rsokolov3Bot '):
                 req = requests.get(f'{cors}https://api.scratch.mit.edu/users/{message.text.split()[1]}/')
                 if req.status_code == 200:
                     rsp = req.json()
@@ -814,7 +797,7 @@ def everything(message):  # Название функции не играет н
                 msg(message.chat.id, "Эта команда не должна быть пустой", message.message_id, message.is_topic_message,
                     message.message_thread_id)
         elif message.text.startswith('/sound'):
-            if message.text.startswith('/sound ') or message.text.startswith('/sound@Botik5555Bot '):
+            if message.text.startswith('/sound ') or message.text.startswith('/sound@rsokolov3Bot '):
                 if re.findall(r'\d+', message.text.split()[1]) == []:
                     msg(message.chat.id, "Хватит меня ломать", message.message_id, message.is_topic_message,
                         message.message_thread_id)
@@ -953,7 +936,7 @@ def everything(message):  # Название функции не играет н
                 "ПРАВИЛА ПОЛЬЗОВАНИЯ БОТОМ:\n1. Не спамить API-командами\n2. Если бот не отвечает, то подождать некоторое время, чтобы бот был включен. У создателя нет сервера, чтобы хостить 24/7\n3. Не нарушать правила в группах из /info\nСписок может пополняться новыми правилами.\nВсе полученные сообщения логируются, чтобы в случае ошибок находить и исправлять их.\nЗа нарушения правил Вы будете добавлены в игнор-лист",
                 message.message_id, message.is_topic_message, message.message_thread_id)
         elif message.text.startswith('/proxy'):
-            if message.text.startswith('/proxy ') or message.text.startswith('/proxy@Botik5555Bot '):
+            if message.text.startswith('/proxy ') or message.text.startswith('/proxy@rsokolov3Bot '):
                 doc(message.chat.id, message.text.split()[1], None, message.message_id, message.is_topic_message,
                     message.message_thread_id)
             else:
@@ -1148,7 +1131,7 @@ def everything(message):  # Название функции не играет н
                 msg(message.chat.id, f'Ошибка, API недоступен', message.message_id, message.is_topic_message,
                     message.message_thread_id)
         elif message.text.startswith('/login'):
-            if message.from_user.id in verytrusted:
+            if message.from_user.id in supertrusted:
                 data = message.text.split(' ', 2)
                 account = login(data[1], data[2])
                 text = f"{data[1]}\n"
@@ -1169,7 +1152,7 @@ def everything(message):  # Название функции не играет н
             if message.chat.id == -1002547061249 or message.chat.id == 5184185845:
                 msg(message.chat.id, "Хватит", message.message_id, message.is_topic_message, message.message_thread_id)
         elif message.text.startswith('/getjson'):
-            if message.text.startswith('/getjson ') or message.text.startswith('/getjson@Botik5555Bot '):
+            if message.text.startswith('/getjson ') or message.text.startswith('/getjson@rsokolov3Bot '):
                 if message.is_topic_message:
                     bot.send_chat_action(message.chat.id, 'typing', message_thread_id=message.message_thread_id)
                 else:
@@ -1218,8 +1201,8 @@ def everything(message):  # Название функции не играет н
             else:
                 msg(message.chat.id, "Ответь на сообщение с видео", message.message_id, message.is_topic_message,
                     message.message_thread_id)
-        elif message.text.startswith('/get') and message.from_user.id in verytrusted:
-            if message.text.startswith('/get ') or message.text.startswith('/get@Botik5555Bot '):
+        elif message.text.startswith('/get') and message.from_user.id in supertrusted:
+            if message.text.startswith('/get ') or message.text.startswith('/get@rsokolov3Bot '):
                 req = requests.get(f'{message.text.split()[1]}', headers={"User-Agent": 'curl/8.18.0'})
                 try:
                     msg(message.chat.id, f"<blockquote expandable>{req.text}</blockquote>", message.message_id,
@@ -1231,12 +1214,12 @@ def everything(message):  # Название функции не играет н
                 msg(message.chat.id, "Эта команда не должна быть пустой", message.message_id, message.is_topic_message,
                     message.message_thread_id)
         elif message.text.startswith('/get') and message.from_user.id in trusted:
-            if message.text.startswith('/get ') or message.text.startswith('/get@Botik5555Bot '):
+            if message.text.startswith('/get ') or message.text.startswith('/get@rsokolov3Bot '):
                 msg(message.chat.id,
                     "Эта команда особенная. Доступ к ней имеют всего 4 человека, потому что она позволяет отправлять GET-запросы на любые URL-адреса от моего имени!",
                     message.message_id, message.is_topic_message, message.message_thread_id)
         elif message.text.startswith('/ayu'):
-            if message.text.startswith('/ayu ') or message.text.startswith('/ayu@Botik5555Bot '):
+            if message.text.startswith('/ayu ') or message.text.startswith('/ayu@rsokolov3Bot '):
                 if message.reply_to_message != None:
                     if len(message.reply_to_message.json['text']) > 99:
                         txt = message.reply_to_message.json['text'][0:100] + '…'
@@ -1328,7 +1311,7 @@ def everything(message):  # Название функции не играет н
             bot.hide_general_forum_topic(chat_id=message.chat.id)
             bot.promote_chat_member()
         elif message.text.startswith('/eval'):
-            if message.text.startswith('/eval ') or message.text.startswith('/eval@Botik5555Bot '):
+            if message.text.startswith('/eval ') or message.text.startswith('/eval@rsokolov3Bot '):
                 if message.from_user.id in trusted:
                     # msg(message.chat.id, f"https://t.me/pojvera_chat/137163", message.message_id, message.is_topic_message, message.message_thread_id)
                     comm = message.text.split(' ', 1)[1]
@@ -1336,9 +1319,9 @@ def everything(message):  # Название функции не играет н
                                  '.pop', 'blocklist.append', 'bot.', 'everything', 'compile', 'locals', 'dir()',
                                  'builtins', '__', 'globals', 'message', 'exit', 'quit', 'clear', 'getattr', 'copy',
                                  'trusted.', 'blocklist.', 'open', '**', ').', 'set_my', 'listdir', 'system', 'dir',
-                                 'vars']
+                                 'vars','append', 'insert']
                     replacements = 'Ах ты хакер!'
-                    if message.from_user.id in verytrusted:
+                    if message.from_user.id in supertrusted:
                         forbidden = ['__import__']
                     is_safe = True
                     for rule in forbidden:
@@ -1386,7 +1369,7 @@ def everything(message):  # Название функции не играет н
             except Exception as e:
                 bot.set_message_reaction(chat_id=message.chat.id, message_id=message.message_id,
                                          reaction=[telebot.types.ReactionTypeEmoji('🤔')])
-        elif cmd('restart', message.text) and message.from_user.id in verytrusted:
+        elif cmd('restart', message.text) and message.from_user.id in supertrusted:
             os.system(f'start {__file__}')
             bot.stop_polling()
         elif message.text.startswith('/dm ') and message.from_user.id in trusted:
@@ -1399,7 +1382,7 @@ def everything(message):  # Название функции не играет н
                 msg(message.chat.id, f"У меня нет права на отпраку сообщений в его лс", message.message_id,
                     message.is_topic_message, message.message_thread_id)
         elif message.text.startswith('/user'):
-            if message.text.startswith('/user ') or message.text.startswith('/user@Botik5555Bot '):
+            if message.text.startswith('/user ') or message.text.startswith('/user@rsokolov3Bot '):
                 username = message.text.split()[1]
                 main_data = requests.get(f'https://api.scratch.mit.edu/users/{username}/')
                 if main_data.status_code == 404:
@@ -1502,7 +1485,7 @@ def everything(message):  # Название функции не играет н
                 uniqueid = f'{str(message.chat.id)}None{str(botmsg.message_id)}'
             click_db[uniqueid] = 0
         # elif message.text.startswith('/exec'):
-        #    if message.text.startswith('/exec ') or message.text.startswith('/exec@Botik5555Bot '):
+        #    if message.text.startswith('/exec ') or message.text.startswith('/exec@rsokolov3Bot '):
         #        if message.from_user.id in trusted:
         ##            if message.from_user.id in [1327137572, 5184185845, 7417081858, 5452789572]:
         #                try:
