@@ -1319,7 +1319,7 @@ def everything(message):  # Название функции не играет н
                                  '.pop', 'blocklist.append', 'bot.', 'everything', 'compile', 'locals', 'dir()',
                                  'builtins', '__', 'globals', 'message', 'exit', 'quit', 'clear', 'getattr', 'copy',
                                  'trusted.', 'blocklist.', 'open', '**', ').', 'set_my', 'listdir', 'system', 'dir',
-                                 'vars','append', 'insert']
+                                 'vars','append', 'insert', 'remove', 'blocklist', 'supertrusted', 'trusted', 'copy']
                     replacements = 'Ах ты хакер!'
                     if message.from_user.id in supertrusted:
                         forbidden = ['__import__']
